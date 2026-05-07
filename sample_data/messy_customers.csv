@@ -1,0 +1,10 @@
+ Customer ID , Name , Email , Country , Signup Date
+1, John Smith , john@example.com , USA , 2026-01-05
+2, Sara Miller , sara@example.com , Canada , 2026-01-07
+3, Ali Rezaei , ali@example.com , Iran , 2026-01-10
+4, Maria Garcia , maria@example.com , Spain , 2026-01-14
+4, Maria Garcia , maria@example.com , Spain , 2026-01-14
+5, David Chen ,  , China , 2026-01-20
+6, Emma Wilson , emma@example.com ,  , 2026-01-22
+,,,,
+7, Omar Khalid , omar@example.com , UAE , 2026-01-25
