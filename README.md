@@ -1,4 +1,5 @@
 # CSV Data Cleaner & Validator
+[![Tests](https://github.com/farshidghaffari/csv-data-cleaner-validator/actions/workflows/tests.yml/badge.svg)](https://github.com/farshidghaffari/csv-data-cleaner-validator/actions/workflows/tests.yml)
 
 **Supporting implementation · Data quality and preprocessing · Python / Pandas**
 
