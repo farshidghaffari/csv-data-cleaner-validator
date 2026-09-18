@@ -3,7 +3,7 @@
 
 **Supporting implementation · Data quality and preprocessing · Python / Pandas**
 
-A reusable preprocessing workflow for normalizing CSV files, removing exact duplicates and empty rows, checking the required schema, reporting unresolved missing values, and exporting a clean dataset for downstream use.
+A reusable preprocessing workflow for normalizing CSV files, removing duplicates after normalization and empty rows, checking the required schema, reporting unresolved missing values, and exporting a clean dataset for downstream use.
 
 ## Business Problem
 
@@ -28,10 +28,10 @@ The current implementation:
 - Trims surrounding whitespace from text values
 - Converts blank text values into explicit missing values
 - Removes fully empty rows
-- Detects and removes exact duplicate rows
+- Detects and removes exact row duplicates **after** heading/text normalization and empty-row removal
 - Verifies that configured required columns exist
 - Counts unresolved missing values by column
-- Preserves the source file and writes a separate cleaned output
+- Writes to the supplied output path; callers must choose a different path to preserve the source
 - Returns a structured processing summary for logging or later integration
 
 ## Validation Summary
@@ -44,7 +44,7 @@ The processing function returns:
 | `output_file` | Cleaned file path |
 | `original_rows` | Row count before cleaning |
 | `rows_after_empty_drop` | Row count after removing fully empty rows |
-| `duplicate_rows_removed` | Number of exact duplicates removed |
+| `duplicate_rows_removed` | Number of duplicate rows removed after normalization |
 | `final_rows` | Row count in the exported file |
 | `columns` | Normalized output columns |
 | `missing_values` | Remaining missing-value count by affected column |
@@ -72,6 +72,12 @@ customer_id, name, email, country, signup_date
 Required field names are normalized before comparison. For example, `Customer ID`, `customer-id`, and `customer_id` are evaluated against the same normalized name.
 
 If a required column is absent, processing stops with a clear `ValueError` and no cleaned dataset is presented as complete.
+
+## Evidence and Design Limits
+
+The [synthetic before/after example](docs/synthetic-example.md) was run through the unchanged implementation. [Design decisions](docs/design-decisions.md) distinguish current behavior from possible extensions.
+
+Pandas infers column types before text normalization. Numeric-looking identifiers can lose leading zeros or become floating-point values when missing cells are present. This tool does **not** guarantee identifier preservation. Required-column validation checks heading presence only; cells can remain missing or semantically invalid. There is no API or integration service in this repository; returned summaries are local function results.
 
 ## Quick Start
 
@@ -136,7 +142,7 @@ The current test suite verifies:
 ## Reliability Decisions
 
 - **Normalize at the boundary.** Downstream logic receives predictable field names.
-- **Do not modify the source file.** A separate output preserves the original input for traceability.
+- **Choose a separate output path.** The demo does this, but the implementation does not reject identical input/output paths and can overwrite the source.
 - **Fail on missing schema.** Absent required columns stop the workflow instead of creating a misleading export.
 - **Report unresolved gaps.** Missing cell values are counted and returned to the caller.
 - **Keep cleaning deterministic.** The same input and configuration produce the same output and summary.
@@ -146,10 +152,10 @@ The current test suite verifies:
 This is a focused supporting implementation, not a complete data-quality platform.
 
 - Required-column validation checks schema presence, not whether every required cell contains a value.
-- Duplicate detection currently removes exact row matches; it does not perform fuzzy matching or identity resolution.
+- Duplicate detection removes exact matches after normalization across all columns, keeping the first. It does not perform fuzzy matching or identity resolution.
 - Email addresses, dates, identifiers, and country values are not semantically validated.
 - Encoding and delimiter selection use the Pandas defaults.
-- Rejected or questionable records are summarized but are not yet exported to a separate review file.
+- Remaining missing cells are counted; invalid emails/dates are not detected or summarized as semantic failures. No rejected-row file or source-row mapping is produced.
 - The workflow runs locally and does not yet include scheduling, notifications, or an integration API.
 
 These boundaries are explicit so implemented behavior remains distinguishable from future extensions.

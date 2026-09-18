@@ -1,0 +1,4 @@
+customer_id,name,email,country,signup_date
+1,Demo One,one@example.invalid,DemoLand,2026-01-01
+2,Demo Two,,DemoLand,not-a-date
+3,Demo Three,not-an-email,DemoLand,2026-01-03

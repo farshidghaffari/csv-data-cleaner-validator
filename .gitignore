@@ -1,0 +1,14 @@
+# Local Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+# Generated demo exports; committed evidence lives under docs/examples/
+output/
+# Local credentials must never be committed
+.env
+.env.*
+!.env.example

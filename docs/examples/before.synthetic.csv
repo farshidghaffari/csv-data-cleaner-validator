@@ -1,0 +1,5 @@
+Customer ID, Name ,Email,Country,Signup Date
+001, Demo One ,one@example.invalid,DemoLand,2026-01-01
+001,Demo One,one@example.invalid,DemoLand,2026-01-01
+002,Demo Two,,DemoLand,not-a-date
+003,Demo Three,not-an-email,DemoLand,2026-01-03
